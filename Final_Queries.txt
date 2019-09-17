@@ -1,0 +1,54 @@
+/* Query 1*/
+
+SELECT ar.ArtistId AS artist_id, ar.Name AS artist_name, strftime('%Y', i.InvoiceDate) AS year, sum(il.Quantity) AS quantity_sold
+FROM Artist ar
+JOIN album a
+ON ar.ArtistId = a.ArtistId
+JOIN Track t
+ON a.AlbumId = t.AlbumId
+JOIN InvoiceLine il
+ON t.TrackId = il.TrackId
+JOIN Invoice i
+ON il.InvoiceId = i.InvoiceId
+GROUP BY 1, 2
+HAVING strftime('%Y', i.InvoiceDate) = '2009'
+ORDER BY 4 DESC
+LIMIT 5;
+
+
+/* Query 2*/
+
+SELECT e.EmployeeId, e.FirstName, e.LastName, e.Title, SUM(i.total) AS total_sales,
+CASE WHEN SUM(i.total) > 800 THEN 'Top' WHEN SUM(i.total) BETWEEN 750 AND 800 THEN 'Medium' ELSE 'Low' END AS performance_level
+FROM Employee e
+Join Customer c
+ON e.EmployeeId = c.SupportRepId
+JOIN Invoice i
+ON c.CustomerId = i.CustomerId
+Group BY 1,2,3
+Order BY 5 DESC;
+
+
+
+/* Query 3*/
+
+SELECT e.FirstName first_name, e.LastName last_name, e.Title job_title, strftime('%Y', i.InvoiceDate) year, sum(i.total) AS sales_amount
+FROM Employee e
+JOIN customer c
+ON e.EmployeeId = c.SupportRepId
+JOIN Invoice i
+ON c.CustomerId = i.CustomerId
+GROUP BY 1, 2, 3, 4;
+
+
+
+/* Query 4*/
+
+SELECT  c.country, sum(i.total) AS Sales
+FROM Customer c
+JOIN Invoice i
+ON c.CustomerId = i.CustomerId
+GROUP BY 1
+HAVING STRFTIME('%Y', i.invoicedate) = '2009'
+ORDER BY 2 DESC
+LIMIT 5;
